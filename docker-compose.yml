@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:                 #Container do banco de dados
+    image: mongo:3.4  #Imagem do mongodb e sua versão
+  backend:            #Container para a parte backend
+    image: node:8.1   #Image do node no container
+    volumes:          
+      - ./backend:/backend  #Pega conteúdo da pasta /backend e cria uma pasta /backend dentro do container e joga o conteúdo nela 
+    ports:                  #Portas para acesso da rede dentro do container backend
+      - 3000:3000           #Porta externa e porta interna
+    command: bash -c "cd /backend && npm i && node app"  #Comando a ser executado no terminal ao executar docker compose up
+                                                          #Abre o bash, entra na pasta /backend dentro do container backend,
+                                                          #E executa node i para instalar depêndencias e node app que e o arquivo,
+                                                          #Aonde se encontra os códigos do backend 
+
+  frontend:               #Container separado para o frontend
+    image: nginx:1.13     #Imagem do servidor nginx
+    volumes:
+      - ./frontend:/usr/share/nginx/html/  #Localização para pegar o conteúdo de front, e pasta de destino dentro do container
+                                            #Aonde o nginx executa arquivos
+    ports:              #Porta externa 100, porta interna 80
+      - 100:80
